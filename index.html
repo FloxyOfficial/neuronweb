@@ -1,9 +1,861 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Neuron</title>
-<meta name='admaven-placement' content=BqdCGqjUG>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Neuron – Roblox Executor (Free)</title>
+
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Theming -->
+  <meta name="theme-color" content="#141416" />
+
+  <!-- Inline CSS -->
+  <style>
+    /* RESET & BASE */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #050505;
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(0, 112, 243, 0.08), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(121, 40, 202, 0.08), transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(0, 198, 255, 0.05), transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+      background-attachment: fixed;
+      background-position: center;
+      min-height: 100vh;
+
+      font-family: "Inter", sans-serif;
+      color: #f0f0f0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    button {
+      cursor: pointer;
+      outline: none;
+      border: none;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      background: linear-gradient(45deg, #090909, #151515, #202020, #151515, #090909);
+      background-size: 600% 600%;
+      animation: gradientAnimation 15s ease infinite;
+    }
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .glow-on-hover:hover {
+      box-shadow: 0 0 8px rgba(57, 68, 253, 0.4);
+    }
+    .transition {
+      transition: all 0.3s ease;
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(14, 14, 15, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .logo i {
+      color: #3944fd;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-links a {
+      font-weight: 500;
+      color: #f0f0f0;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: #9caeff;
+    }
+    .discord-btn {
+      background: #5865f2;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .discord-btn:hover {
+      background: #4852cc;
+    }
+
+    /* LOADING SCREEN (OPTIONAL) */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0c0c0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.6s ease;
+    }
+    .loading-screen.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loading-title {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #f0f0f0;
+    }
+    .loading-dots span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin: 0 4px;
+      background: #999;
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    @keyframes blink {
+      0%,
+      80%,
+      100% {
+        opacity: 0;
+      }
+      40% {
+        opacity: 1;
+      }
+    }
+
+    /* HERO SECTION */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 2rem;
+      animation: fadeIn 1s forwards;
+    }
+    .hero-content {
+      flex: 1 1 500px;
+      max-width: 600px;
+      margin-top: 3rem;
+    }
+    .badge {
+      display: inline-block;
+      background: #3944fd;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+    .highlight {
+      color: #3944fd;
+    }
+    .hero-description {
+      color: #b7b7b7;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+    }
+    /* Turn the download button into an <a> link to redirect */
+    .btn-primary,
+    .btn-secondary {
+      padding: 0.8rem 1.4rem;
+      border-radius: 4px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-primary {
+      background: #3944fd;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #2b34c4;
+    }
+    .btn-secondary {
+      background: #18181c;
+      color: #f0f0f0;
+      border: 1px solid #2b2b2f;
+    }
+    .btn-secondary:hover {
+      background: #2b2b2f;
+    }
+    .stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: block;
+    }
+    .stat-label {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    /* TERMINAL SECTION */
+    .terminal-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      animation: fadeIn 1s forwards;
+    }
+    .terminal {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #141416;
+      border-radius: 6px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      background: #1e1e22;
+      padding: 0.5rem 1rem;
+    }
+    .terminal-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .terminal-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .red {
+      background: #ff5f56;
+    }
+    .yellow {
+      background: #ffbd2e;
+    }
+    .green {
+      background: #27c93f;
+    }
+    .terminal-title {
+      margin-left: 1rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .terminal-content {
+      padding: 1rem 1.5rem;
+      font-family: "JetBrains Mono", monospace;
+      color: #cfcfcf;
+      position: relative;
+    }
+    .command-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .prompt {
+      color: #3944fd;
+      margin-right: 0.5rem;
+    }
+    .command {
+      color: #fff;
+    }
+    .response {
+      margin-left: 1.9rem;
+      color: #9c9c9c;
+      margin-bottom: 0.5rem;
+    }
+    .success {
+      color: #6bd76b;
+    }
+    .loading-dots span {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      margin: 0 2px;
+      background: #9c9c9c;
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
+
+    /* FEATURES SECTION */
+    .features {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      animation: fadeIn 1s forwards;
+    }
+    .features h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .features-subtitle {
+      color: #999;
+      margin-bottom: 3rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .feature-card {
+      background: #141416;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+    }
+    .feature-card i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #3944fd;
+    }
+    .feature-card h3 {
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    /* SINGLE FREE PLAN */
+    .free {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      animation: fadeIn 1s forwards;
+    }
+    .free h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .free-subtitle {
+      color: #999;
+      margin-bottom: 3rem;
+    }
+    .free-card {
+      background: #141416;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      margin: 0 auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .free-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+    }
+    .free-card h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    .free-card .price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      color: #3944fd;
+    }
+    .free-features-list {
+      text-align: left;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+    .free-features-list li {
+      margin: 0.4rem 0;
+    }
+    .free-card .btn-primary {
+      margin-top: 1rem;
+    }
+
+    /* FAQ SECTION */
+    .faq {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      animation: fadeIn 1s forwards;
+    }
+    .faq h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .faq-subtitle {
+      color: #999;
+      margin-bottom: 3rem;
+    }
+    .faq-grid {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .faq-item {
+      border-bottom: 1px solid #2a2a2e;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      color: #fff;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-question i {
+      transition: transform 0.3s;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s;
+      margin-top: 0.5rem;
+      color: #ccc;
+      line-height: 1.5;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 200px; /* enough for typical answers */
+    }
+    .faq-item.open .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    /* FOOTER */
+    .footer {
+      background: #141416;
+      padding: 2rem;
+      margin-top: 4rem;
+    }
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-brand {
+      max-width: 300px;
+    }
+    .footer-brand h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    .footer-brand p {
+      color: #999;
+      line-height: 1.5;
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .footer-column h4 {
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      color: #fff;
+    }
+    .footer-column a {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: #bbb;
+      transition: color 0.2s;
+    }
+    .footer-column a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      margin-top: 2rem;
+      text-align: center;
+      color: #666;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
-<p>Coming Soon</p>
+  <!-- LOADING SCREEN -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-title">Neuron</div>
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-bolt"></i>
+        <span>Neuron</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#free">Free</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://discord.gg/yourinvite" class="discord-btn">
+          <i class="fab fa-discord"></i> Join Discord
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">🚀 VERSION 2.0</div>
+        <h1>
+          Unleash Your <span class="highlight">Potential.</span>
+        </h1>
+        <p class="hero-description">
+          Experience the most powerful and reliable Roblox executor with
+          unmatched features and stability — fully free, no key system required.
+        </p>
+        <div class="cta-group">
+          <!-- CHANGE #1: an <a> tag linking to installneuron.xyz/download -->
+          <a href="https://installneuron.xyz/download" class="btn-primary glow-on-hover">
+            <i class="fas fa-download"></i>
+            Download Now
+          </a>
+          <button class="btn-secondary glow-on-hover">
+            <i class="fas fa-book"></i>
+            Documentation
+          </button>
+        </div>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-number">1</span>
+            <span class="stat-label">Active User</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">99.9%</span>
+            <span class="stat-label">Success Rate</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMINAL SECTION -->
+    <section class="terminal-section">
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-buttons">
+            <span class="terminal-button red"></span>
+            <span class="terminal-button yellow"></span>
+            <span class="terminal-button green"></span>
+          </div>
+          <div class="terminal-title">Neuron Executor</div>
+        </div>
+        <div class="terminal-content">
+          <div class="command-line">
+            <span class="prompt">$</span>
+            <span class="command">neuron init</span>
+          </div>
+          <div class="response">Initializing Neuron...</div>
+          <div class="command-line">
+            <span class="prompt">$</span>
+            <span class="command">neuron load script.lua</span>
+          </div>
+          <div class="response success">Script loaded successfully!</div>
+          <div class="command-line">
+            <span class="prompt">$</span>
+            <span class="command">neuron execute</span>
+          </div>
+          <div class="response">
+            <div class="loading-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="features">
+      <h2>Why Choose <span class="highlight">Neuron?</span></h2>
+      <p class="features-subtitle">
+        Elevate your scripting experience with a sleek, black-themed interface
+        and top-tier performance — no key system needed.
+      </p>
+      <div class="features-grid">
+        <div class="feature-card transition">
+          <i class="fas fa-bolt"></i>
+          <h3>Lightning Fast</h3>
+          <p>
+            Execute scripts instantly with our optimized injector, handling even
+            the most complex scripts effortlessly.
+          </p>
+        </div>
+        <div class="feature-card transition">
+          <i class="fas fa-shield-alt"></i>
+          <h3>Secure & Safe</h3>
+          <p>
+            Stay protected with robust security that keeps Neuron undetected
+            against Roblox’s defenses.
+          </p>
+        </div>
+        <div class="feature-card transition">
+          <i class="fas fa-code"></i>
+          <h3>Built-in Editor</h3>
+          <p>
+            Quickly modify scripts on the fly with our integrated code editor,
+            perfect for custom tweaks.
+          </p>
+        </div>
+        <div class="feature-card transition">
+          <i class="fas fa-sync"></i>
+          <h3>Auto Updates</h3>
+          <p>
+            Keep everything up to date automatically, ensuring maximum
+            compatibility and performance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SINGLE FREE PLAN -->
+    <section id="free" class="free">
+      <h2>Completely <span class="highlight">Free</span></h2>
+      <p class="free-subtitle">
+        No hidden fees, no locked features. Neuron is entirely free to use.
+      </p>
+      <div class="free-card transition">
+        <h3>Free</h3>
+        <div class="price">$0.00<span style="font-size: 1rem;"> / forever</span></div>
+        <ul class="free-features-list">
+          <li><i class="fas fa-check"></i> Full Script Execution</li>
+          <li><i class="fas fa-check"></i> Built-in Script Hub</li>
+          <li><i class="fas fa-check"></i> 24/7 Support</li>
+          <li><i class="fas fa-check"></i> Auto Updates</li>
+          <li><i class="fas fa-check"></i> No Key System Required</li>
+        </ul>
+        <!-- CHANGE #2: the "Download Neuron" link also goes to installneuron.xyz/download -->
+        <a href="https://installneuron.xyz/download" class="btn-primary glow-on-hover">
+          Download Neuron
+        </a>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="faq">
+      <h2>Frequently Asked <span class="highlight">Questions.</span></h2>
+      <p class="faq-subtitle">
+        Everything you need to know about Neuron.
+      </p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>What is Neuron?</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Neuron is an advanced Roblox executor built for speed and simplicity, 
+              allowing you to run scripts effortlessly with no key system required.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How fast does it inject scripts?</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Almost instantly for most scripts. Even large or complex scripts 
+              typically take just a second or two to load and run.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Is it truly free?</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Yes! All of Neuron's features are completely free, with no 
+              hidden upgrades or paywalls.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Is it safe to use?</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Absolutely. We maintain robust security measures to keep Neuron
+              undetected and safe for everyday scripting.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Neuron</h3>
+        <p>
+          The future of Roblox scripting — faster, safer, and entirely free for everyone.
+        </p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#free">Free</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <a href="#scripts">Script Hub</a>
+          <a href="#docs">Documentation</a>
+          <a href="#support">Support</a>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <a href="#terms">Terms of Service</a>
+          <a href="#privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Neuron. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- OPTIONAL: JavaScript for FAQ Accordion + Loading Screen -->
+  <script>
+    // Hide the loading screen after a short delay
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loadingScreen").classList.add("hide");
+      }, 1200);
+    });
+
+    // Simple FAQ toggle
+    document.querySelectorAll(".faq-item").forEach((item) => {
+      const question = item.querySelector(".faq-question");
+      question.addEventListener("click", () => {
+        item.classList.toggle("open");
+      });
+    });
+  </script>
 </body>
 </html>
