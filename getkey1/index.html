@@ -1,1 +1,24 @@
-works2
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Restricted Access</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get the referrer URL
+      var referrer = document.referrer;
+      // Check if it contains "youtube.com"
+      if (!referrer.includes("youtube.com")) {
+        // Option 1: Replace content with an access denied message
+        document.body.innerHTML = "<h1>Access Denied</h1><p>You must come from youtube.com to view this page.</p>";
+        // Option 2: Redirect to another page (uncomment to use)
+        // window.location.href = "https://www.example.com/access-denied.html";
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <p>This content is only visible if you come from youtube.com.</p>
+</body>
+</html>
