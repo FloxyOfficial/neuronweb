@@ -6,20 +6,11 @@
   <title>Neuron</title>
 
   <!-- Font Awesome for icons -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Theming -->
   <meta name="theme-color" content="#141416" />
@@ -44,7 +35,6 @@
       background-attachment: fixed;
       background-position: center;
       min-height: 100vh;
-
       font-family: "Inter", sans-serif;
       color: #f0f0f0;
       overflow-x: hidden;
@@ -75,25 +65,13 @@
       animation: gradientAnimation 15s ease infinite;
     }
     @keyframes gradientAnimation {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
     .glow-on-hover:hover {
       box-shadow: 0 0 8px rgba(57, 68, 253, 0.4);
@@ -190,21 +168,11 @@
       border-radius: 50%;
       animation: blink 1.4s infinite both;
     }
-    .loading-dots span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .loading-dots span:nth-child(3) {
-      animation-delay: 0.4s;
-    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink {
-      0%,
-      80%,
-      100% {
-        opacity: 0;
-      }
-      40% {
-        opacity: 1;
-      }
+      0%, 80%, 100% { opacity: 0; }
+      40% { opacity: 1; }
     }
 
     /* HERO SECTION */
@@ -248,7 +216,6 @@
       display: flex;
       gap: 1rem;
     }
-    /* Buttons */
     .btn-primary,
     .btn-secondary {
       padding: 0.8rem 1.4rem;
@@ -263,25 +230,19 @@
       background: #3944fd;
       color: #fff;
     }
-    .btn-primary:hover {
-      background: #2b34c4;
-    }
+    .btn-primary:hover { background: #2b34c4; }
     .btn-secondary {
       background: #18181c;
       color: #f0f0f0;
       border: 1px solid #2b2b2f;
     }
-    .btn-secondary:hover {
-      background: #2b2b2f;
-    }
+    .btn-secondary:hover { background: #2b2b2f; }
     .stats {
       display: flex;
       gap: 2rem;
       margin-top: 2rem;
     }
-    .stat-item {
-      text-align: center;
-    }
+    .stat-item { text-align: center; }
     .stat-number {
       font-size: 1.5rem;
       font-weight: 700;
@@ -291,8 +252,7 @@
       color: #777;
       font-size: 0.9rem;
     }
-
-    /* (Additional sections omitted for brevity; they remain unchanged) */
+    /* (Other sections remain unchanged for brevity) */
   </style>
 </head>
 <body>
@@ -336,12 +296,11 @@
           unmatched features and stability — fully free, no key system required.
         </p>
         <div class="cta-group">
-          <!-- Download button remains unchanged -->
           <a href="https://installneuron.xyz/download" class="btn-primary glow-on-hover">
             <i class="fas fa-download"></i>
             Download Now
           </a>
-          <!-- Changed Documentation button to "Get Key" -->
+          <!-- Changed from "Documentation" to "Get Key" -->
           <a href="https://getneuron.fun/getkey" class="btn-secondary glow-on-hover">
             <i class="fas fa-book"></i>
             Get Key
@@ -364,7 +323,8 @@
       </div>
     </section>
 
-    <!-- (Remaining sections remain unchanged for brevity) -->
+    <!-- (Additional sections such as Terminal, Features, FAQ, etc. remain unchanged) -->
+
   </main>
 
   <!-- FOOTER -->
@@ -401,16 +361,14 @@
     </div>
   </footer>
 
-  <!-- OPTIONAL: JavaScript for FAQ Accordion + Loading Screen -->
+  <!-- JavaScript for FAQ Accordion and Loading Screen -->
   <script>
-    // Hide the loading screen after a short delay
     window.addEventListener("load", () => {
       setTimeout(() => {
         document.getElementById("loadingScreen").classList.add("hide");
       }, 1200);
     });
 
-    // Simple FAQ toggle
     document.querySelectorAll(".faq-item").forEach((item) => {
       const question = item.querySelector(".faq-question");
       question.addEventListener("click", () => {
