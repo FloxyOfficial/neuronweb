@@ -1,20 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Restricted Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Get Neuron Key</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #0D1B2A 0%, #1B263B 100%);
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      border-radius: 10px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.5);
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #countdown {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    #claimButton {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      background-color: grey;
+      color: white;
+      cursor: not-allowed;
+      transition: background-color 0.3s ease;
+    }
+    #claimButton.active {
+      background-color: #1B263B;
+      cursor: pointer;
+    }
+    #keyDisplay {
+      margin-top: 20px;
+      font-size: 20px;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Claim Your Neuron Key</h1>
+    <div id="countdown">60</div>
+    <button id="claimButton" disabled>Claim Key</button>
+    <div id="keyDisplay"></div>
+  </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var referrer = document.referrer.toLowerCase();
-      // Allow if referrer includes "youtube.com"
-      if (!referrer.includes("youtube.com")) {
-        document.body.innerHTML = "<h1>Access Denied</h1><p>You must come from youtube.com to view this page.</p>";
+    let countdownElement = document.getElementById('countdown');
+    let claimButton = document.getElementById('claimButton');
+    let keyDisplay = document.getElementById('keyDisplay');
+    let countdown = 60;
+    let countdownInterval;
+    function startCountdown() {
+      countdownInterval = setInterval(() => {
+        if (document.hidden) return;
+        if (countdown > 0) {
+          countdown--;
+          countdownElement.textContent = countdown;
+        } else {
+          clearInterval(countdownInterval);
+          claimButton.disabled = false;
+          claimButton.classList.add('active');
+          countdownElement.textContent = "Ready!";
+        }
+      }, 1000);
+    }
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden && countdown > 0 && !countdownInterval) {
+        startCountdown();
+      }
+    });
+    startCountdown();
+    claimButton.addEventListener('click', async function() {
+      if (!claimButton.disabled) {
+        try {
+          let response = await fetch('/api/getkey', { method: 'POST', credentials: 'include' });
+          let data = await response.json();
+          if (data.success) {
+            keyDisplay.textContent = "Your Key: " + data.key;
+            claimButton.disabled = true;
+            claimButton.classList.remove('active');
+            claimButton.style.backgroundColor = "#444";
+          } else {
+            keyDisplay.textContent = "Error: " + data.message;
+          }
+        } catch (err) {
+          keyDisplay.textContent = "Error connecting to server.";
+        }
       }
     });
   </script>
-</head>
-<body>
-  <h1>Welcome</h1>
-  <p>This content is only visible if you come from youtube.com.</p>
 </body>
 </html>
